@@ -141,9 +141,17 @@ class I3status(Thread):
             config['output_format'] = 'i3bar'
 
         # py3status uses only the i3bar protocol
-        assert config['output_format'] == 'i3bar', \
-            'i3status output_format should be set to "i3bar" on {}'.format(
-                self.i3status_config_path
+        if config['output_format'] != 'i3bar':
+            raise ValueError(
+                'i3status output_format should be set' +
+                ' to "i3bar" on {}{}'.format(
+                    self.i3status_config_path,
+                    ' or on your own {}/.i3status.conf'.format(
+                        os.path.expanduser('~')
+                    )
+                    if self.i3status_config_path == '/etc/i3status.conf'
+                    else ''
+                )
             )
 
         return config
